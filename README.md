@@ -12,8 +12,8 @@ Este projeto tem como objetivo desenvolver um motor de processamento de dados cl
 A finalidade central é implementar e comparar três algoritmos distintos de **Estatística de Ordem** para encontrar o *k-ésimo* elemento de um conjunto massivo de dados (com até 10.000 registros), auxiliando na identificação de picos críticos de poluição.
 
 ## 👩‍💻 Equipe
-* **Desenvolvimento (C):** Rafaelle Barreto dos Anjos
-* **Análise e Relatório Técnico:** [Nome da sua Dupla aqui]
+* **Desenvolvimento (C):** Rafaelly Barreto dos Anjos
+* **Análise e Relatório Técnico:** Luiza Dos Santos Costa
 
 ## 📂 Estrutura do Repositório
 * `src/`: Contém os códigos-fonte em linguagem C (`main.c`).
