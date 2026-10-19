@@ -26,7 +26,7 @@
 * Valor de Alerta: 135.8 ug/m3 (Dia 2026-10-30)
 
 **3. Os 10 Dias Mais Secos:**
-* 1. Data: 2026-10-26 | Umidade: 20% | Temp: 31.4 C
+1. Data: 2026-10-26 | Umidade: 20% | Temp: 31.4 C
 2. Data: 2026-09-15 | Umidade: 20% | Temp: 39.2 C
 3. Data: 2026-08-09 | Umidade: 20% | Temp: 39.4 C
 4. Data: 2026-08-07 | Umidade: 20% | Temp: 37.8 C
