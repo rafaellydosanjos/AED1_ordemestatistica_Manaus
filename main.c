@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Autora: Rafaelly dos Anjos
+// Disciplina: Algoritmos e Estruturas de Dados I
+
 typedef struct {
     int id_sensor;
     char data[15];
@@ -10,11 +13,10 @@ typedef struct {
     float nivel_pm25;
 } Medicao;
 
-// 1. SUA PRIMEIRA FUNÇÃO (Que lê o arquivo)
+// 1. FUNÇÃO DE LEITURA
 Medicao* ler_dados_csv(const char* nome_arquivo, int* total_lido) {
     FILE* arquivo = fopen(nome_arquivo, "r");
-    if (arquivo == NULL) 
-    return NULL;
+    if (arquivo == NULL) return NULL;
 
     int capacidade = 1000;
     Medicao* vetor = (Medicao*) malloc(capacidade * sizeof(Medicao));
@@ -37,14 +39,14 @@ Medicao* ler_dados_csv(const char* nome_arquivo, int* total_lido) {
     return vetor;
 }
 
-// 2. A NOVA FUNÇÃO (Abordagem A - Bubble Sort)
+// 2. FUNÇÃO DA ABORDAGEM A (Bubble Sort)
 void bubble_sort_pm25(Medicao* vetor, int n, long long* comparacoes) {
     *comparacoes = 0;
     int i, j;
     Medicao temp;
     for (i = 0; i < n - 1; i++) {
         for (j = 0; j < n - i - 1; j++) {
-            (*comparacoes)++; // Isso aqui é o que sua dupla precisa para o relatório!
+            (*comparacoes)++; 
             if (vetor[j].nivel_pm25 > vetor[j+1].nivel_pm25) {
                 temp = vetor[j];
                 vetor[j] = vetor[j+1];
@@ -54,26 +56,53 @@ void bubble_sort_pm25(Medicao* vetor, int n, long long* comparacoes) {
     }
 }
 
-// 3. O CHEFE (A função main que executa tudo)
+// 3. NOVA FUNÇÃO: Ajuda a copiar os dados para cada teste ser justo
+void copiar_vetor(Medicao* origem, Medicao* destino, int n) {
+    for(int i = 0; i < n; i++) {
+        destino[i] = origem[i];
+    }
+}
+
+// 4. O CHEFE (Testando a Abordagem A para 1k, 5k e 10k)
 int main() {
     int total_registros = 0;
     
-    // Manda ler o arquivo
-    Medicao* dados = ler_dados_csv("dados_clima_manaus.csv", &total_registros);
+    // Lê a base de dados
+    Medicao* dados_originais = ler_dados_csv("dados_clima_manaus.csv", &total_registros);
 
-    if (dados != NULL) {
-        long long comparacoes_A = 0;
+    if (dados_originais != NULL) {
+        printf("Arquivo lido. Total de registros: %d\n\n", total_registros);
+
+        // Trava de segurança: Verifica se o arquivo tem pelo menos 10.000 linhas
+        if (total_registros < 10000) {
+            printf("AVISO: O seu arquivo tem apenas %d linhas!\n", total_registros);
+            printf("Para testar 10.000, voce precisa colocar o arquivo CSV original completo na pasta.\n");
+            free(dados_originais);
+            return 1;
+        }
+
+        int tamanhos[] = {1000, 5000, 10000};
         
-        printf("Arquivo lido. Total de registros: %d\n", total_registros);
-        printf("Iniciando a ordenacao da Abordagem A (Isso pode demorar alguns segundos)...\n");
-        
-        // Manda executar a Abordagem A
-        bubble_sort_pm25(dados, total_registros, &comparacoes_A);
-        
-        printf("\n--- RESULTADO PARA A SUA DUPLA ---\n");
-        printf("Para N = %d, a Abordagem A fez %lld comparacoes.\n", total_registros, comparacoes_A);
-        
-        free(dados); 
+        printf("=== TESTES DA ABORDAGEM A (Bubble Sort) ===\n");
+
+        for (int i = 0; i < 3; i++) {
+            int n = tamanhos[i];
+            
+            // Separa uma fatia exata (1000, 5000 ou 10000)
+            Medicao* dados_teste = (Medicao*) malloc(n * sizeof(Medicao));
+            copiar_vetor(dados_originais, dados_teste, n);
+
+            long long comp_A = 0;
+            printf("Ordenando N = %d (Aguarde, isso pode demorar)...\n", n);
+            bubble_sort_pm25(dados_teste, n, &comp_A);
+            
+            // Imprime o resultado final para você copiar para o README
+            printf("-> RESULTADO: %lld comparacoes\n\n", comp_A);
+
+            free(dados_teste);
+        }
+
+        free(dados_originais); 
     }
     return 0;
 }
