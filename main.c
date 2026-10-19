@@ -10,67 +10,69 @@ typedef struct {
     float nivel_pm25;
 } Medicao;
 
+// 1. SUA PRIMEIRA FUNÇÃO (Que lê o arquivo)
 Medicao* ler_dados_csv(const char* nome_arquivo, int* total_lido) {
     FILE* arquivo = fopen(nome_arquivo, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo %s\n", nome_arquivo);
-        return NULL; // Se o arquivo não existir, o programa para aqui
-    }
+    if (arquivo == NULL) return NULL;
 
-    // Começamos alocando espaço para 1000 medições
     int capacidade = 1000;
     Medicao* vetor = (Medicao*) malloc(capacidade * sizeof(Medicao));
     *total_lido = 0;
-
-    char linha[200]; // Uma string grande o suficiente para ler uma linha do CSV
+    char linha[200];
     
-    // Ler a primeira linha (cabeçalho) e ignorá-la (não queremos processar a palavra "Temperatura")
-    fgets(linha, sizeof(linha), arquivo);
-
-    // Ler as linhas de dados, uma por vez
+    fgets(linha, sizeof(linha), arquivo); // Pula cabeçalho
     while (fgets(linha, sizeof(linha), arquivo)) {
-        // Se já lemos mais do que a capacidade atual, dobramos o espaço
         if (*total_lido >= capacidade) {
             capacidade *= 2;
             vetor = (Medicao*) realloc(vetor, capacidade * sizeof(Medicao));
         }
-        
-        // Quebrando a linha nas variáveis da struct. O "%[^,]" significa "leia até encontrar uma vírgula"
         sscanf(linha, "%d,%[^,],%f,%d,%f", 
-            &vetor[*total_lido].id_sensor,
-            vetor[*total_lido].data,
-            &vetor[*total_lido].temperatura_c,
-            &vetor[*total_lido].umidade_porcentagem,
+            &vetor[*total_lido].id_sensor, vetor[*total_lido].data,
+            &vetor[*total_lido].temperatura_c, &vetor[*total_lido].umidade_porcentagem,
             &vetor[*total_lido].nivel_pm25);
-            
-        (*total_lido)++; // Aumenta a contagem de registros lidos
+        (*total_lido)++;
     }
-
     fclose(arquivo);
     return vetor;
 }
 
+// 2. A NOVA FUNÇÃO (Abordagem A - Bubble Sort)
+void bubble_sort_pm25(Medicao* vetor, int n, long long* comparacoes) {
+    *comparacoes = 0;
+    int i, j;
+    Medicao temp;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            (*comparacoes)++; // Isso aqui é o que sua dupla precisa para o relatório!
+            if (vetor[j].nivel_pm25 > vetor[j+1].nivel_pm25) {
+                temp = vetor[j];
+                vetor[j] = vetor[j+1];
+                vetor[j+1] = temp;
+            }
+        }
+    }
+}
+
+// 3. O CHEFE (A função main que executa tudo)
 int main() {
     int total_registros = 0;
     
-    // Chama a função passando o nome do arquivo que está na mesma pasta
+    // Manda ler o arquivo
     Medicao* dados = ler_dados_csv("dados_clima_manaus.csv", &total_registros);
 
     if (dados != NULL) {
-        printf("Sucesso! O arquivo foi lido.\n");
-        printf("Total de registros carregados na memoria: %d\n", total_registros);
+        long long comparacoes_A = 0;
         
-        // Vamos imprimir os 5 primeiros só para checar se a leitura ficou certinha
-        printf("\n--- Teste de Leitura (Primeiros 5 registros) ---\n");
-        for(int i = 0; i < 5 && i < total_registros; i++) {
-            printf("ID: %d | Data: %s | Temp: %.1f | Umid: %d | PM2.5: %.1f\n", 
-                dados[i].id_sensor, dados[i].data, dados[i].temperatura_c, 
-                dados[i].umidade_porcentagem, dados[i].nivel_pm25);
-        }
-
-        // Muito importante em C: liberar a memória no final!
+        printf("Arquivo lido. Total de registros: %d\n", total_registros);
+        printf("Iniciando a ordenacao da Abordagem A (Isso pode demorar alguns segundos)...\n");
+        
+        // Manda executar a Abordagem A
+        bubble_sort_pm25(dados, total_registros, &comparacoes_A);
+        
+        printf("\n--- RESULTADO PARA A SUA DUPLA ---\n");
+        printf("Para N = %d, a Abordagem A fez %lld comparacoes.\n", total_registros, comparacoes_A);
+        
         free(dados); 
     }
-
     return 0;
 }
