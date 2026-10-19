@@ -3,9 +3,6 @@
 #include <string.h>
 #include <time.h>
 
-// Autora: Rafaelle Barreto dos Anjos
-// Disciplina: Algoritmos e Estruturas de Dados I
-
 typedef struct {
     int id_sensor;
     char data[15];
@@ -65,13 +62,10 @@ void trocar(Medicao* a, Medicao* b) {
 }
 
 int particionar(Medicao* vetor, int inicio, int fim, long long* comparacoes) {
-    // Escolhe pivô aleatório
     int indice_pivo = inicio + rand() % (fim - inicio + 1);
     trocar(&vetor[indice_pivo], &vetor[fim]); 
-    
     float pivo = vetor[fim].nivel_pm25;
     int i = (inicio - 1);
-    
     for (int j = inicio; j <= fim - 1; j++) {
         (*comparacoes)++;
         if (vetor[j].nivel_pm25 <= pivo) {
@@ -93,6 +87,33 @@ Medicao quickselect_pm25(Medicao* vetor, int inicio, int fim, int k, long long* 
     return vetor[inicio];
 }
 
+// --- ABORDAGEM C: CONTAGEM COMPARATIVA SEQUENCIAL ---
+Medicao contagem_sequencial_pm25(Medicao* vetor, int n, int k, long long* comparacoes) {
+    *comparacoes = 0;
+    
+    for (int i = 0; i < n; i++) {
+        float candidato = vetor[i].nivel_pm25;
+        int menores = 0;
+        int iguais = 0;
+        
+        // Varre o vetor contando quantos são menores e quantos são iguais ao candidato
+        for (int j = 0; j < n; j++) {
+            (*comparacoes)++;
+            if (vetor[j].nivel_pm25 < candidato) {
+                menores++;
+            } else if (vetor[j].nivel_pm25 == candidato) {
+                iguais++;
+            }
+        }
+        
+        // Lógica contra empates (Questão 2 do relatório)
+        if (k >= menores && k < (menores + iguais)) {
+            return vetor[i];
+        }
+    }
+    return vetor[0];
+}
+
 // FUNÇÃO AUXILIAR
 void copiar_vetor(Medicao* origem, Medicao* destino, int n) {
     for(int i = 0; i < n; i++) destino[i] = origem[i];
@@ -101,33 +122,38 @@ void copiar_vetor(Medicao* origem, Medicao* destino, int n) {
 // O CHEFE QUE CONTROLA OS TESTES
 int main() {
     int total_registros = 0;
-    srand(time(NULL)); // Inicializa os números aleatórios para o pivô
+    srand(time(NULL)); 
     
     Medicao* dados_originais = ler_dados_csv("dados_clima_manaus.csv", &total_registros);
 
     if (dados_originais != NULL && total_registros >= 10000) {
         int tamanhos[] = {1000, 5000, 10000};
         
-        printf("=== TESTES DE DESEMPENHO (ABORDAGENS A e B) ===\n\n");
+        printf("=== TESTES DE DESEMPENHO (ABORDAGENS A, B e C) ===\n\n");
 
         for (int i = 0; i < 3; i++) {
             int n = tamanhos[i];
             printf(">>> TESTANDO PARA N = %d <<<\n", n);
             
-            // Separa os dados limpos
             Medicao* dados_teste = (Medicao*) malloc(n * sizeof(Medicao));
 
             // Teste da Abordagem A
             copiar_vetor(dados_originais, dados_teste, n);
             long long comp_A = 0;
             bubble_sort_pm25(dados_teste, n, &comp_A);
-            printf("Abordagem A (Bubble Sort) fez: %lld comparacoes\n", comp_A);
+            printf("Abordagem A (Bubble Sort)   : %lld comparacoes\n", comp_A);
 
-            // Teste da Abordagem B (Buscando a Mediana, ou seja, k = N/2)
+            // Teste da Abordagem B
             copiar_vetor(dados_originais, dados_teste, n);
             long long comp_B = 0;
             quickselect_pm25(dados_teste, 0, n - 1, n / 2, &comp_B);
-            printf("Abordagem B (Quickselect) fez: %lld comparacoes\n\n", comp_B);
+            printf("Abordagem B (Quickselect)   : %lld comparacoes\n", comp_B);
+
+            // Teste da Abordagem C (Buscando a mediana k = N/2)
+            copiar_vetor(dados_originais, dados_teste, n);
+            long long comp_C = 0;
+            contagem_sequencial_pm25(dados_teste, n, n / 2, &comp_C);
+            printf("Abordagem C (Contagem seq.) : %lld comparacoes\n\n", comp_C);
 
             free(dados_teste);
         }
