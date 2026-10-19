@@ -1,8 +1,8 @@
 | Tamanho da Entrada (N) | Abordagem A (Bubble Sort) | Abordagem B |
 | :--- | :--- | :--- |
-| **N = 1.000** | *digite o resultado aqui* | *aguardando...* |
-| **N = 5.000** | *digite o resultado aqui* | *aguardando...* |
-| **N = 10.000** | *digite o resultado aqui* | *aguardando...* |
+| **N = 1.000** | *499500* | *aguardando...* |
+| **N = 5.000** | *12497500* | *aguardando...* |
+| **N = 10.000** | *49995000* | *aguardando...* |
 
 ## 🎯 Status de Desenvolvimento (Checklist)
 - [x] Configuração da `struct` e leitura dinâmica do CSV (via `malloc`/`realloc`).
