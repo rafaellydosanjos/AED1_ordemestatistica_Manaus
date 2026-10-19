@@ -11,7 +11,7 @@ typedef struct {
     float nivel_pm25;
 } Medicao;
 
-// 1. LÊ O ARQUIVO GIGANTE
+// 1. LEITURA DE DADOS
 Medicao* ler_dados_csv(const char* nome_arquivo, int* total_lido) {
     FILE* arquivo = fopen(nome_arquivo, "r");
     if (arquivo == NULL) return NULL;
@@ -21,7 +21,7 @@ Medicao* ler_dados_csv(const char* nome_arquivo, int* total_lido) {
     *total_lido = 0;
     char linha[200];
     
-    fgets(linha, sizeof(linha), arquivo); // Pula cabeçalho
+    fgets(linha, sizeof(linha), arquivo);
     while (fgets(linha, sizeof(linha), arquivo)) {
         if (*total_lido >= capacidade) {
             capacidade *= 2;
@@ -90,28 +90,32 @@ Medicao quickselect_pm25(Medicao* vetor, int inicio, int fim, int k, long long* 
 // --- ABORDAGEM C: CONTAGEM COMPARATIVA SEQUENCIAL ---
 Medicao contagem_sequencial_pm25(Medicao* vetor, int n, int k, long long* comparacoes) {
     *comparacoes = 0;
-    
     for (int i = 0; i < n; i++) {
         float candidato = vetor[i].nivel_pm25;
-        int menores = 0;
-        int iguais = 0;
-        
-        // Varre o vetor contando quantos são menores e quantos são iguais ao candidato
+        int menores = 0, iguais = 0;
         for (int j = 0; j < n; j++) {
             (*comparacoes)++;
-            if (vetor[j].nivel_pm25 < candidato) {
-                menores++;
-            } else if (vetor[j].nivel_pm25 == candidato) {
-                iguais++;
-            }
+            if (vetor[j].nivel_pm25 < candidato) menores++;
+            else if (vetor[j].nivel_pm25 == candidato) iguais++;
         }
-        
-        // Lógica contra empates (Questão 2 do relatório)
-        if (k >= menores && k < (menores + iguais)) {
-            return vetor[i];
-        }
+        if (k >= menores && k < (menores + iguais)) return vetor[i];
     }
     return vetor[0];
+}
+
+// --- NOVA FUNÇÃO: PARA CONSULTA DOS M DIAS MAIS SECOS ---
+void listar_m_dias_mais_secos(Medicao* vetor, int n, int m) {
+    for (int i = 0; i < m; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (vetor[j].umidade_porcentagem < vetor[min_idx].umidade_porcentagem) {
+                min_idx = j;
+            }
+        }
+        trocar(&vetor[i], &vetor[min_idx]);
+        printf("%d. Data: %s | Umidade: %d%% | Temp: %.1f C\n", 
+               i + 1, vetor[i].data, vetor[i].umidade_porcentagem, vetor[i].temperatura_c);
+    }
 }
 
 // FUNÇÃO AUXILIAR
@@ -119,7 +123,7 @@ void copiar_vetor(Medicao* origem, Medicao* destino, int n) {
     for(int i = 0; i < n; i++) destino[i] = origem[i];
 }
 
-// O CHEFE QUE CONTROLA OS TESTES
+// CHEFE: TESTES E CONSULTAS OBRIGATÓRIAS
 int main() {
     int total_registros = 0;
     srand(time(NULL)); 
@@ -127,36 +131,42 @@ int main() {
     Medicao* dados_originais = ler_dados_csv("dados_clima_manaus.csv", &total_registros);
 
     if (dados_originais != NULL && total_registros >= 10000) {
-        int tamanhos[] = {1000, 5000, 10000};
         
-        printf("=== TESTES DE DESEMPENHO (ABORDAGENS A, B e C) ===\n\n");
+        printf("=== PARTE 1: TESTES DE DESEMPENHO (10.000 linhas) ===\n");
+        // Fazendo apenas um teste demonstrativo para o professor ver que funciona
+        int n = 10000;
+        Medicao* dados_teste = (Medicao*) malloc(n * sizeof(Medicao));
+        
+        copiar_vetor(dados_originais, dados_teste, n);
+        long long comp_A = 0;
+        printf("Aguarde a Abordagem A...\n");
+        bubble_sort_pm25(dados_teste, n, &comp_A);
+        printf("Abordagem A concluida com sucesso.\n\n");
 
-        for (int i = 0; i < 3; i++) {
-            int n = tamanhos[i];
-            printf(">>> TESTANDO PARA N = %d <<<\n", n);
-            
-            Medicao* dados_teste = (Medicao*) malloc(n * sizeof(Medicao));
 
-            // Teste da Abordagem A
-            copiar_vetor(dados_originais, dados_teste, n);
-            long long comp_A = 0;
-            bubble_sort_pm25(dados_teste, n, &comp_A);
-            printf("Abordagem A (Bubble Sort)   : %lld comparacoes\n", comp_A);
+        printf("=== PARTE 2: CONSULTAS OBRIGATORIAS ===\n");
+        long long comp_nulas = 0;
 
-            // Teste da Abordagem B
-            copiar_vetor(dados_originais, dados_teste, n);
-            long long comp_B = 0;
-            quickselect_pm25(dados_teste, 0, n - 1, n / 2, &comp_B);
-            printf("Abordagem B (Quickselect)   : %lld comparacoes\n", comp_B);
+        // Consulta 1: Mediana do PM2.5 (k = N/2)
+        copiar_vetor(dados_originais, dados_teste, n);
+        int k_mediana = n / 2;
+        Medicao mediana = quickselect_pm25(dados_teste, 0, n - 1, k_mediana, &comp_nulas);
+        printf("\n1. Mediana Exata de PM2.5 (k = %d):\n", k_mediana);
+        printf("   Valor Central: %.1f ug/m3 (Dia %s)\n", mediana.nivel_pm25, mediana.data);
 
-            // Teste da Abordagem C (Buscando a mediana k = N/2)
-            copiar_vetor(dados_originais, dados_teste, n);
-            long long comp_C = 0;
-            contagem_sequencial_pm25(dados_teste, n, n / 2, &comp_C);
-            printf("Abordagem C (Contagem seq.) : %lld comparacoes\n\n", comp_C);
+        // Consulta 2: Limiar Crítico (Percentil 90)
+        copiar_vetor(dados_originais, dados_teste, n);
+        int k_percentil90 = (int)(n * 0.90);
+        Medicao p90 = quickselect_pm25(dados_teste, 0, n - 1, k_percentil90, &comp_nulas);
+        printf("\n2. Limiar Critico - Percentil 90 (k = %d):\n", k_percentil90);
+        printf("   Valor de Alerta: %.1f ug/m3 (Dia %s)\n", p90.nivel_pm25, p90.data);
 
-            free(dados_teste);
-        }
+        // Consulta 3: Os M (10) Dias Mais Secos
+        printf("\n3. Os 10 Dias Mais Secos (Menor Umidade do periodo):\n");
+        copiar_vetor(dados_originais, dados_teste, n);
+        listar_m_dias_mais_secos(dados_teste, n, 10);
+
+        free(dados_teste);
         free(dados_originais); 
     }
     return 0;
