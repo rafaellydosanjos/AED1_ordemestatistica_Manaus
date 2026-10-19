@@ -4,8 +4,8 @@
 - [x] **Abordagem B:** Divisão e Conquista (Particionamento com pivô aleatório).
 - [x] **Abordagem C:** Contagem Comparativa Sequencial (Tratamento de empates com `<=`).
 - [x] **Consultas:** Mediana Exata de PM2.5 ($k = N/2$).
-- [ ] **Consultas:** Limiar Crítico (Percentil 90) de PM2.5.
-- [ ] **Consultas:** M dias mais secos (menor umidade).
+- [x] **Consultas:** Limiar Crítico (Percentil 90) de PM2.5.
+- [x] **Consultas:** M dias mais secos (menor umidade).
 
 ---
 
