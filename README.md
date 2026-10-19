@@ -1,6 +1,6 @@
 | Tamanho da Entrada (N) | Abordagem A (Bubble Sort) | Abordagem B |
 | :--- | :--- | :--- |
-| **N = 10** | *aguardando...* | *aguardando...* |
+| **N = 10** | *45* | *aguardando...* |
 
 ## 🎯 Status de Desenvolvimento (Checklist)
 - [ ] Configuração da `struct` e leitura dinâmica do CSV (via `malloc`/`realloc`).
