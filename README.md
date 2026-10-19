@@ -20,10 +20,19 @@
 ## 📊 Resultados das Consultas Obrigatórias
 
 **1. Mediana Exata de PM2.5 (k = 5000):**
-* [Cole aqui o valor e a data que apareceram no terminal]
+* Valor Central: 79.9 ug/m3 (Dia 2026-09-21)
 
 **2. Limiar Crítico - Percentil 90 (k = 9000):**
-* [Cole aqui o valor e a data que apareceram no terminal]
+* Valor de Alerta: 135.8 ug/m3 (Dia 2026-10-30)
 
 **3. Os 10 Dias Mais Secos:**
-* [Cole aqui a lista dos 10 dias que o terminal imprimiu]
+* 1. Data: 2026-10-26 | Umidade: 20% | Temp: 31.4 C
+2. Data: 2026-09-15 | Umidade: 20% | Temp: 39.2 C
+3. Data: 2026-08-09 | Umidade: 20% | Temp: 39.4 C
+4. Data: 2026-08-07 | Umidade: 20% | Temp: 37.8 C
+5. Data: 2026-08-19 | Umidade: 20% | Temp: 38.5 C
+6. Data: 2026-09-11 | Umidade: 20% | Temp: 39.2 C
+7. Data: 2026-08-07 | Umidade: 20% | Temp: 35.8 C
+8. Data: 2026-10-15 | Umidade: 20% | Temp: 35.6 C
+9. Data: 2026-08-17 | Umidade: 20% | Temp: 33.1 C
+10. Data: 2026-08-06 | Umidade: 20% | Temp: 39.2 C
