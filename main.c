@@ -13,7 +13,8 @@ typedef struct {
 // 1. SUA PRIMEIRA FUNÇÃO (Que lê o arquivo)
 Medicao* ler_dados_csv(const char* nome_arquivo, int* total_lido) {
     FILE* arquivo = fopen(nome_arquivo, "r");
-    if (arquivo == NULL) return NULL;
+    if (arquivo == NULL) 
+    return NULL;
 
     int capacidade = 1000;
     Medicao* vetor = (Medicao*) malloc(capacidade * sizeof(Medicao));
