@@ -2,13 +2,13 @@
 
 **1. Gerar a base de dados (10.000 registros)**
 <<<<<<< HEAD
-Abra o terminal na pasta do projeto e execute os comandos abaixo para compilar o gerador e criar o arquivo CSV:
-`gcc gerador.c -o gerador`
+Abra o terminal na pasta do projeto e execute os comandos abaixo para compilar o gerador e criar o arquivo CSV:  
+`gcc gerador.c -o gerador`  
 `./gerador`
 
 **2. Executar o analisador principal**
-Após a geração do CSV, compile e execute o código principal para visualizar o desempenho dos algoritmos e o resultado das consultas obrigatórias:
-`gcc codigo-fonte.c -o clima`
+Após a geração do CSV, compile e execute o código principal para visualizar o desempenho dos algoritmos e o resultado das consultas obrigatórias:  
+`gcc codigo-fonte.c -o clima`  
 `./clima`
 
 ---
