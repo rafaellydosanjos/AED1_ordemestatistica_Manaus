@@ -10,16 +10,6 @@ Abra o terminal na pasta do projeto e execute os comandos abaixo para compilar o
 Após a geração do CSV, compile e execute o código principal para visualizar o desempenho dos algoritmos e o resultado das consultas obrigatórias:
 `gcc codigo-fonte.c -o clima`
 `./clima`
-=======
-Abra o terminal na pasta do projeto e execute os comandos abaixo para compilar o gerador e criar o arquivo CSV:  
-`gcc gerador.c -o gerador`  
-`./gerador`
-
-**2. Executar o analisador principal**
-Após a geração do CSV, compile e execute o código principal para visualizar o desempenho dos algoritmos e o resultado das consultas obrigatórias:  
-`gcc main.c -o clima`  
-`./clima`  
->>>>>>> 5b4e87075b5966e59af4a47885da135e5c8b4e47
 
 ---
 
