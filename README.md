@@ -51,10 +51,3 @@ Após a geração do CSV, compile e execute o código principal para visualizar 
 8. Data: 2026-10-15 | Umidade: 20% | Temp: 35.6 C
 9. Data: 2026-08-17 | Umidade: 20% | Temp: 33.1 C
 10. Data: 2026-08-06 | Umidade: 20% | Temp: 39.2 C
-<<<<<<< HEAD
-
----
-
-
-=======
->>>>>>> 5b4e87075b5966e59af4a47885da135e5c8b4e47
