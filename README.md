@@ -1,4 +1,4 @@
-## 🎯 Status de Desenvolvimento (Checklist)
+## Checklist
 - [x] Configuração da `struct` e leitura dinâmica do CSV (via `malloc`/`realloc`).
 - [x] **Abordagem A:** Ordenação Completa (Bubble Sort).
 - [x] **Abordagem B:** Divisão e Conquista (Particionamento com pivô aleatório).
@@ -17,7 +17,7 @@
 
 ---
 
-## 📊 Resultados das Consultas Obrigatórias
+## Resultados das Consultas Obrigatórias
 
 **1. Mediana Exata de PM2.5 (k = 5000):**
 * Valor Central: 79.9 ug/m3 (Dia 2026-09-21)
